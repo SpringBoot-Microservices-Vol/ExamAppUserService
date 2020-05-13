@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.exam.api.userservice.dto.UserDto;
-import com.exam.api.userservice.model.CreateUserReponse;
+import com.exam.api.userservice.model.CreateUserResponse;
 import com.exam.api.userservice.model.CreateUserRequest;
 import com.exam.api.userservice.service.UserService;
 
@@ -30,10 +30,10 @@ public class UserController {
 	}
 
 	@PostMapping
-	public ResponseEntity<CreateUserReponse> createUser(@Valid @RequestBody CreateUserRequest request) {
+	public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
 
 		UserDto userDto = modelMapper.map(request, UserDto.class);
-		CreateUserReponse resReponse = modelMapper.map(userService.createUser(userDto), CreateUserReponse.class);
+		CreateUserResponse resReponse = modelMapper.map(userService.createUser(userDto), CreateUserResponse.class);
 		return new ResponseEntity<>(resReponse, HttpStatus.CREATED);
 	}
 }
