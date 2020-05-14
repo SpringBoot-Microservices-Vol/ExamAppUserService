@@ -49,4 +49,13 @@ public class UserServiceImpl implements UserService {
 		return new User(userEntity.getUsername(), userEntity.getEncryptedPassword(), true, true, true, true,
 				new ArrayList<>());
 	}
+
+	@Override
+	public UserDto getUserDetailsbyUsername(String username) {
+		UserEntity userEntity = userRepository.findByUsername(username);
+
+		if (userEntity == null)
+			throw new UsernameNotFoundException(username);
+		return modelMapper.map(userEntity, UserDto.class);
+	}
 }
