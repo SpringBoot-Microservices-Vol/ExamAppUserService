@@ -28,7 +28,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private UserService userService;
 	private Environment environment;
-	private AuthenticationManager authenticationManager;
 
 	public AuthenticationFilter(UserService userService, Environment environment,
 			AuthenticationManager authenticationManager) {
