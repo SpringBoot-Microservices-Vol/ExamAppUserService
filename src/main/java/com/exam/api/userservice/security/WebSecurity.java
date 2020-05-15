@@ -1,11 +1,13 @@
 package com.exam.api.userservice.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.exam.api.userservice.service.UserService;
@@ -18,6 +20,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	private UserService userService;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+	@Autowired
 	public WebSecurity(Environment environment, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.environment = environment;
 		this.userService = userService;
@@ -29,12 +32,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/**").hasIpAddress(environment.getProperty("gateway.ip")).and()
 				.addFilter(getAuthenticationFilter());
 		http.headers().frameOptions().disable();
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
 	private AuthenticationFilter getAuthenticationFilter() throws Exception {
 
-		AuthenticationFilter authenticationFilter = new AuthenticationFilter(userService, environment,
-				authenticationManager());
+		AuthenticationFilter authenticationFilter = new AuthenticationFilter(userService, environment, authenticationManager());
+		authenticationFilter.setEnvironment(environment);
 		authenticationFilter.setFilterProcessesUrl(environment.getProperty("login.url.path"));
 		return authenticationFilter;
 	}
