@@ -4,9 +4,11 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +25,19 @@ public class UserController {
 
 	private UserService userService;
 	private ModelMapper modelMapper;
+	private Environment env;
 
 	@Autowired
-	public UserController(UserService userService, ModelMapper modelMapper) {
+	public UserController(UserService userService, ModelMapper modelMapper, Environment env) {
 		this.userService = userService;
 		this.modelMapper = modelMapper;
+		this.env = env;
+	}
+
+	@GetMapping("/check")
+	public String getCurrentToken() {
+		return "Working on port" + env.getProperty("local.server.port") + ", with token = "
+				+ env.getProperty("token.secret");
 	}
 
 	@PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, produces = {
